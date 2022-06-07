@@ -1,192 +1,117 @@
 #include "chifoumivue.h"
-
 #include "ui_chifoumivue.h"
+#include "modele.h"
+
 #include <QMetaObject>
+#include <QMessageBox>
 
 ChifoumiVue ::ChifoumiVue(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::ChifoumiVue)
 {
-    ui->setupUi(this);   
-    //Connection des signals et des slots
-    QObject::connect(ui->boutonPartie,SIGNAL(clicked()),this,SLOT(nouvellePartie()));
-    QObject::connect(ui->boutonCiseau, SIGNAL(clicked()),this,SLOT(ciseau()));
-    QObject::connect(ui->boutonPierre, SIGNAL(clicked()),this,SLOT(pierre()));
-    QObject::connect(ui->boutonPapier, SIGNAL(clicked()),this,SLOT(papier()));
-
-    setEtatJeu(horsPartie);
-
+    ui->setupUi(this);
 }
-
 ChifoumiVue ::~ChifoumiVue()
 {
     delete ui;
 }
-
-ChifoumiVue::UnEtat ChifoumiVue::getEtatJeu()
+void ChifoumiVue::conexionPresentation(QObject *p)
 {
-    return etatJeu;
+    //pour se connecter avec la presentation
+     QObject::connect(ui->boutonPartie,SIGNAL(clicked()),p,SLOT(demanderNouvellePartie()));
+     QObject::connect(ui->boutonCiseau, SIGNAL(clicked()),p,SLOT(demanderCiseau()));
+     QObject::connect(ui->boutonPierre, SIGNAL(clicked()),p,SLOT(demanderPierre()));
+     QObject::connect(ui->boutonPapier, SIGNAL(clicked()),p,SLOT(demanderPapier()));
+}
+void ChifoumiVue::deconexionPresentation(QObject *p)
+{
+    //pour se deconnecter de la presentation
+     QObject::disconnect(ui->boutonPartie,SIGNAL(clicked()),p,SLOT(demanderNouvellePartie()));
+     QObject::disconnect(ui->boutonCiseau, SIGNAL(clicked()),p,SLOT(demanderCiseau()));
+     QObject::disconnect(ui->boutonPierre, SIGNAL(clicked()),p,SLOT(demanderPierre()));
+     QObject::disconnect(ui->boutonPapier, SIGNAL(clicked()),p,SLOT(demanderPapier()));
 }
 
-void ChifoumiVue::setEtatJeu(UnEtat etat)
+
+void ChifoumiVue::setEtatBoutons(bool b)
 {
-    etatJeu = etat;
+    ui->boutonCiseau->setEnabled(b);
+    ui->boutonPapier->setEnabled(b);
+    ui->boutonPierre->setEnabled(b);
 }
 
-Chifoumi *ChifoumiVue::getModele()
-{
-    return modele;
-}
 
-void ChifoumiVue::setModele(Chifoumi * m)
+void ChifoumiVue::majImageCoupMachine(Modele::UnCoup c)
 {
-    modele = m;
-}
-
-void ChifoumiVue::majImageCoupMachine()
-{
-    Chifoumi::UnCoup c;
-    c = modele->getCoupMachine();
-
+    /*Mise à jour de l'image de la machine*/
     switch (c) {
-    case Chifoumi::pierre:
+    case Modele::pierre:
         ui->imageCoupMachine->setPixmap(QPixmap(QString::fromUtf8(":/chifoumi/images/pierre.gif")));
         break;
-    case Chifoumi::ciseau:
+    case Modele::ciseau:
         ui->imageCoupMachine->setPixmap(QPixmap(QString::fromUtf8(":/chifoumi/images/ciseau.gif")));
         break;
-    case Chifoumi::papier:
+    case Modele::papier:
         ui->imageCoupMachine->setPixmap(QPixmap(QString::fromUtf8(":/chifoumi/images/papier.gif")));
         break;
-    case Chifoumi::rien:
+    case Modele::rien:
         ui->imageCoupMachine->setPixmap(QPixmap(QString::fromUtf8(":/chifoumi/images/rien.gif")));
         break;
     default: break;
     }
 }
-
-void ChifoumiVue::majImageCoupJoueur()
+void ChifoumiVue::majImageCoupJoueur(Modele::UnCoup c)
 {
-    Chifoumi::UnCoup c;
-    c = modele->getCoupJoueur();
-
+    /*Mise à jour de l'image du coup du joueur*/
     switch (c) {
-    case Chifoumi::pierre:
+    case Modele::pierre:
         ui->imageCoupJoueur->setPixmap(QPixmap(QString::fromUtf8(":/chifoumi/images/pierre.gif")));
         break;
-    case Chifoumi::ciseau:
+    case Modele::ciseau:
         ui->imageCoupJoueur->setPixmap(QPixmap(QString::fromUtf8(":/chifoumi/images/ciseau.gif")));
         break;
-    case Chifoumi::papier:
+    case Modele::papier:
         ui->imageCoupJoueur->setPixmap(QPixmap(QString::fromUtf8(":/chifoumi/images/papier.gif")));
         break;
-    case Chifoumi::rien:
+    case Modele::rien:
         ui->imageCoupJoueur->setPixmap(QPixmap(QString::fromUtf8(":/chifoumi/images/rien.gif")));
         break;
     default: break;
     }
 }
-
-void ChifoumiVue::majLabelScoreMachine()
+void ChifoumiVue::majLabelScoreMachine(unsigned int scoreMachine)
 {
-    unsigned int s;
-    QString inutile;
-
-    s = modele->getScoreMachine();
-    ui->labelScoreMachine->setText(inutile.setNum(s));
+    ui->labelScoreMachine->setText(QString::number(scoreMachine));
+}
+void ChifoumiVue::majLabelScoreJoueur(unsigned int scoreJoueur)
+{
+    ui->labelScoreJoueur->setText(QString::number(scoreJoueur));
+}
+void ChifoumiVue::majScoresCoups(int unsigned scoreJoueur, int unsigned scoreMachine, Modele::UnCoup coupJoueur, Modele::UnCoup coupMachine)
+{
+    //Met a jour les elements graphiques
+    majImageCoupMachine(coupMachine);
+    majImageCoupJoueur(coupJoueur);
+    majLabelScoreMachine(scoreMachine);
+    majLabelScoreJoueur(scoreJoueur);
 }
 
-void ChifoumiVue::majLabelScoreJoueur()
-{
-    unsigned int s;
-    QString inutile;
-    s = modele->getScoreJoueur();
 
-    ui->labelScoreJoueur->setText(inutile.setNum(s));
-}
-
-void ChifoumiVue::jouer(Chifoumi::UnCoup coup)
+void ChifoumiVue::setJoueurEnBleu(bool bleu)
 {
-    switch(etatJeu)
+    if (bleu)
     {
-    case horsPartie:
-        //neant
-        break;
-    case partieEnCours :
-        // -- activte 2 --
-        // mise a jour du modele
-        modele->setCoupJoueur(coup);
-        modele->setCoupMachine(modele->genererUnCoup());
-        modele->majScores(modele->determinerGagnant());
-
-        // changement d'état
-        setEtatJeu(partieEnCours);
-
-        // mise à jour de l'interface
-        majImageCoupMachine();
-        majImageCoupJoueur();
-        majLabelScoreMachine();
-        majLabelScoreJoueur();
-
-        break;
-    default :
-        break;
+        ui->labelScoreJoueur->setStyleSheet("color : #2986CC;");
+        ui->labelVous->setStyleSheet("color : #2986CC;");
+    }
+    else
+    {
+        ui->labelScoreJoueur->setStyleSheet(styleSheet());
+        ui->labelVous->setStyleSheet(styleSheet());
     }
 }
-
-void ChifoumiVue::pierre()
+void ChifoumiVue::focusBJouer()
 {
-    ChifoumiVue::jouer(Chifoumi::pierre);
+    ui->boutonPartie->setFocus();
 }
 
-void ChifoumiVue::ciseau()
-{
-    ChifoumiVue::jouer(Chifoumi::ciseau);
-}
-
-void ChifoumiVue::papier()
-{
-    ChifoumiVue::jouer(Chifoumi::papier);
-}
-
-void ChifoumiVue::nouvellePartie()
-{
-    switch(etatJeu)
-    {
-    case horsPartie:
-        // -- activite 1 --
-        // mise a jour du modele
-        // changement d'état
-        setEtatJeu(partieEnCours); // on reste ds le même état
-
-        // mise à jour de l'interface
-        ui->boutonCiseau->setEnabled(true);
-        ui->boutonPapier->setEnabled(true);
-        ui->boutonPierre->setEnabled(true);
-        ui->boutonPartie->setFocus();
-
-        break;
-
-    case partieEnCours :
-        // -- activite 3 --
-        // mise a jour du modele
-        modele->initCoups();
-        modele->initScores();
-
-        // changement d'état
-        setEtatJeu(partieEnCours); // on reste dans le même état
-
-        // mise à jour de l'interface
-        majImageCoupJoueur();
-        majImageCoupMachine();
-        majLabelScoreJoueur();
-        majLabelScoreMachine();
-        ui->boutonPartie->setFocus();
-
-        break;
-
-    default :
-        break;
-    }
-
-}

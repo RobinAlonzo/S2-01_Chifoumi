@@ -17,23 +17,7 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <layout class="QGridLayout" name="layoutGrilleJoueur">
-      <item row="2" column="0">
-       <widget class="QLabel" name="imageCoupJoueur">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="pixmap">
-         <pixmap resource="chifoumivue.qrc">:/chifoumi/images/rien.gif</pixmap>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-        <property name="margin">
-         <number>7</number>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
+      <item row="2" column="1" alignment="Qt::AlignHCenter">
        <widget class="QLabel" name="imageEppee">
         <property name="maximumSize">
          <size>
@@ -45,7 +29,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="chifoumivue.qrc">:/chifoumi/images/versus_70.png</pixmap>
+         <pixmap resource="chifoumieVue.qrc">:/chifoumi/images/versus_70.png</pixmap>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -58,8 +42,59 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="labelScoreJoueur">
+      <item row="0" column="2">
+       <widget class="QLabel" name="labelMachine">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Machine</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <property name="margin">
+         <number>7</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="imageCoupJoueur">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="chifoumieVue.qrc">:/chifoumi/images/rien.gif</pixmap>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <property name="margin">
+         <number>7</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QLabel" name="imageCoupMachine">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="chifoumieVue.qrc">:/chifoumi/images/rien.gif</pixmap>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <property name="margin">
+         <number>7</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="labelScoreMachine">
         <property name="font">
          <font>
           <pointsize>11</pointsize>
@@ -99,43 +134,8 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
-       <widget class="QLabel" name="imageCoupMachine">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="pixmap">
-         <pixmap resource="chifoumivue.qrc">:/chifoumi/images/rien.gif</pixmap>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-        <property name="margin">
-         <number>7</number>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="labelMachine">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Machine</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-        <property name="margin">
-         <number>7</number>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QLabel" name="labelScoreMachine">
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelScoreJoueur">
         <property name="font">
          <font>
           <pointsize>11</pointsize>
@@ -202,7 +202,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="chifoumivue.qrc">
+          <iconset resource="chifoumieVue.qrc">
            <normaloff>:/chifoumi/images/pierre_115.png</normaloff>:/chifoumi/images/pierre_115.png</iconset>
          </property>
          <property name="iconSize">
@@ -228,7 +228,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="chifoumivue.qrc">
+          <iconset resource="chifoumieVue.qrc">
            <normaloff>:/chifoumi/images/ciseau_115.png</normaloff>:/chifoumi/images/ciseau_115.png</iconset>
          </property>
          <property name="iconSize">
@@ -254,7 +254,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="chifoumivue.qrc">
+          <iconset resource="chifoumieVue.qrc">
            <normaloff>:/chifoumi/images/papier_115.png</normaloff>:/chifoumi/images/papier_115.png</iconset>
          </property>
          <property name="iconSize">
@@ -312,7 +312,7 @@
   </widget>
  </widget>
  <resources>
-  <include location="chifoumivue.qrc"/>
+  <include location="chifoumieVue.qrc"/>
  </resources>
  <connections/>
 </ui>

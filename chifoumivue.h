@@ -2,7 +2,8 @@
 #define CHIFOUMIVUE_H
 
 #include <QMainWindow>
-#include "chifoumi.h"
+#include "modele.h"
+#include "presentation.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ChifoumiVue; }
@@ -13,34 +14,26 @@ class ChifoumiVue : public QMainWindow
     Q_OBJECT
 
 public:
-    ChifoumiVue (QWidget *parent = nullptr);
-    ~ChifoumiVue ();
+    //initialisation
+    ChifoumiVue (QWidget *parent = nullptr);        //Constructeur du chifoumiVue
+    ~ChifoumiVue ();                                //Destructeur du chifoumiVue
+    void conexionPresentation(QObject *);           //Connexion à la présentation
+    void deconexionPresentation(QObject *);         //Deconnexion de la présentation
 
-    enum UnEtat {horsPartie, partieEnCours};
+    //Maj des boutons
+    void setEtatBoutons(bool);                      //Active/Desactive les boutons de jeux
 
-    UnEtat getEtatJeu();
-    void setEtatJeu(UnEtat);
-    Chifoumi* getModele();
-    void setModele(Chifoumi*);
+    //Maj des labels
+    void majImageCoupMachine(Modele::UnCoup);       //Met à jour l image du coup de la machine en fonction du coup en parametre
+    void majImageCoupJoueur(Modele::UnCoup);        //Met à jour l image du coup du joueur en fonction du coup en parametre
+    void majLabelScoreMachine(unsigned int);        //Met à jour le label représentant le score de la machine en fonction du nombre en parametre
+    void majLabelScoreJoueur(unsigned int);         //Met à jour le label représentant le score du joueur en fonction du nombre en parametre
+    void majScoresCoups(unsigned int, unsigned int, Modele::UnCoup, Modele::UnCoup);    //Met a jour l ensemble des elements graphiques de scores et de coups en fonction des parametres.
 
-    void majImageCoupMachine();
-    void majImageCoupJoueur();
-    void majLabelScoreMachine();
-    void majLabelScoreJoueur();
-
-    void jouer(Chifoumi::UnCoup);
-
-public slots:
-    void pierre();
-    void ciseau();
-    void papier();
-    void nouvellePartie();
-
-
+    //Autre
+    void setJoueurEnBleu(bool); //Met la partie du joueur en bleu ou en noir en fonction du booleen
+    void focusBJouer();         //Met le focus sur le bouton de partie
 private:
     Ui::ChifoumiVue *ui;
-    UnEtat etatJeu;
-    Chifoumi *modele;
-
 };
 #endif // CHIFOUMIVUE_H
