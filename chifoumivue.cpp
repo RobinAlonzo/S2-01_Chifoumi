@@ -1,6 +1,7 @@
 #include "chifoumivue.h"
 #include "ui_chifoumivue.h"
 #include "modele.h"
+#include "parametres.h"
 
 #include <QMetaObject>
 #include <QMessageBox>
@@ -27,6 +28,7 @@ void ChifoumiVue::connexionPresentation(QObject *p)
      QObject::connect(ui->boutonPierre, SIGNAL(clicked()),p,SLOT(demanderPierre()));
      QObject::connect(ui->boutonPapier, SIGNAL(clicked()),p,SLOT(demanderPapier()));
      QObject::connect(ui->boutonPause, SIGNAL(clicked()), p, SLOT(start_stop_timer()));
+     QObject::connect(ui->actionParametres, SIGNAL(triggered()), p, SLOT(clicParametres()));
 }
 void ChifoumiVue::deconnexionPresentation(QObject *p)
 {
@@ -36,6 +38,12 @@ void ChifoumiVue::deconnexionPresentation(QObject *p)
      QObject::disconnect(ui->boutonPierre, SIGNAL(clicked()),p,SLOT(demanderPierre()));
      QObject::disconnect(ui->boutonPapier, SIGNAL(clicked()),p,SLOT(demanderPapier()));
      QObject::disconnect(ui->boutonPause, SIGNAL(clicked()), p, SLOT(start_stop_timer()));
+     QObject::disconnect(ui->actionParametres, SIGNAL(triggered()), p, SLOT(clicParametres()));
+}
+
+QString ChifoumiVue::getNomJoueur() const
+{
+    return ui->labelVous->text();
 }
 
 
@@ -126,6 +134,11 @@ void ChifoumiVue::setJoueurEnBleu(bool bleu)
         ui->labelVous->setStyleSheet(styleSheet());
     }
 }
+
+void ChifoumiVue::setEtatActionParam(bool b)
+{
+    ui->actionParametres->setEnabled(b);
+}
 void ChifoumiVue::majTimer(unsigned int  tempsRestant)
 {
     QString contenu("Temps restant : ");
@@ -138,16 +151,21 @@ void ChifoumiVue::majLabelBPause(QString message)
     ui->boutonPause->setText(message);
 }
 
+void ChifoumiVue::majNomJoueur(QString nom)
+{
+    ui->labelVous->setText(nom);
+}
+
 
 void ChifoumiVue::setFocusBJouer()
 {
     ui->boutonPartie->setFocus();
 }
+
 void ChifoumiVue::setFocusBPause()
 {
     ui->boutonPause->setFocus();
 }
-
 
 void ChifoumiVue::aPropos()
 {

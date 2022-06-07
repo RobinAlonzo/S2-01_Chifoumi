@@ -1,6 +1,7 @@
 #include "presentation.h"
 #include "chifoumivue.h"
 #include "modele.h"
+#include "parametres.h"
 
 #include <QApplication>
 
@@ -9,11 +10,10 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     Modele *m = new Modele();               //Creation du modèle
-    Presentation *p = new Presentation(m);  //Creation de la présentation et son association au modèle
-    ChifoumiVue v;                          //Creation de la vue
-    p->conexionVue(&v);                     //Association de la vue à la présentation et initialisation de la vue (score de fin)
-    v.connexionPresentation(p);              //Connexion des signaux de la vue avec les slots de la présentation
+    ChifoumiVue *v = new ChifoumiVue;       //Creation de la vue
+    Param *d = new Param(v);                //Creation du la page de parametres qui a pour parent la vue
 
-    v.show();
+    Presentation *p = new Presentation(m, v, d);  //Creation de la présentation et son association au modèle
+
     return a.exec();
 }

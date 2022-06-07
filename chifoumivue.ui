@@ -379,6 +379,7 @@
      <string>Fichier</string>
     </property>
     <addaction name="actionQuitter"/>
+    <addaction name="actionParametres"/>
    </widget>
    <widget class="QMenu" name="menuAide_2">
     <property name="title">
@@ -400,6 +401,14 @@
   <action name="actionA_propos">
    <property name="text">
     <string>A propos</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+  <action name="actionParametres">
+   <property name="text">
+    <string>Paramètres</string>
    </property>
    <property name="shortcut">
     <string>F2</string>

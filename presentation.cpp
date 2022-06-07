@@ -1,31 +1,37 @@
 #include "presentation.h"
 #include "chifoumivue.h"
-#include "QDebug"
 #include <QMessageBox>
+#include "parametres.h"
 
-Presentation::Presentation(Modele *m, QObject *parent)
-    : QObject{parent}, _leModele(m)
+Presentation::Presentation(Modele *m, ChifoumiVue *v, Param *p, QObject *parent)
+    : QObject{parent}
+    , _leModele(m)
+    , _laVue(v)
+    , _lesParam(p)
 {
     timer = new QTimer(this);
 
+    //Initialisation nom
+    nomJoueur = "Vous";
+    _laVue->majNomJoueur(nomJoueur);
+
     //Initialisation score max
     scoreFin = 3;
+    _laVue->initScoreFin(scoreFin);
 
     //initialisation timer
     tempsPartie = 20;
     tempsRestant = tempsPartie;
     connect(timer, SIGNAL(timeout()), this, SLOT(gererTimer()));
-    timer->setInterval(100);
-}
-void Presentation::conexionVue(ChifoumiVue *v)
-{
-    //Conexion a la vue
-    _laVue = v;
-
-    //Initialisations score final et temps de depart
-    _laVue->initScoreFin(scoreFin);
     _laVue->majTimer(tempsRestant);
+    timer->setInterval(100);
+
+    v->connexionPresentation(this);
+    p->connexionPresentation(this, nomJoueur, scoreFin, tempsPartie);
+
+    _laVue->show();
 }
+
 
 
 Modele *Presentation::getModele()
@@ -62,6 +68,7 @@ void Presentation::jouer(Modele::UnCoup c)
 
             _laVue->setEtatsBJeu(false);
             _laVue->setEtatBPause(false);
+            _laVue->setEtatActionParam(true);
             affichageFin();
         }
         else
@@ -175,6 +182,7 @@ void Presentation::demanderNouvellePartie()
         _laVue->setFocusBJouer();
         _laVue->setJoueurEnBleu(true);
         _laVue->setEtatBPause(true);
+        _laVue->setEtatActionParam(false);
     }
     else if (_leModele->getEtatJeu() == Modele::partieEnCours)
     {
@@ -244,6 +252,7 @@ void Presentation::gererTimer()
             // -- mise à jour de l'interface --
             _laVue->setEtatsBJeu(false);
             _laVue->setEtatBPause(false);
+            _laVue->setEtatActionParam(true);
             affichageFin();
         }
     }
@@ -267,6 +276,85 @@ void Presentation::start_stop_timer()
         _laVue->setEtatBPartie(true);           //Re active le bouton de partie
         _laVue->majLabelBPause("Pause");        //Change le nom du bouton en "Pause"
         _laVue->setFocusBJouer();               //Met le focus sur le bouton de partie
+    }
+}
+
+void Presentation::clicParametres()
+{    
+    //Hors partie ou partie terminee
+    _lesParam->afficherDialog();
+}
+
+void Presentation::modifParametres()
+{
+
+    switch (_leModele->getEtatJeu())
+    {
+    case Modele::horsPartie:
+
+        if (_lesParam->nomModifie())
+        {
+            //Modification faite sur le nom du joueur
+            nomJoueur = _lesParam->getNom();
+            _laVue->majNomJoueur(nomJoueur);
+        }
+
+        if (_lesParam->scoreFinModifie())
+        {
+            //Modification faite sur le nombre de points max
+            scoreFin = _lesParam->getScore();
+            _laVue->initScoreFin(scoreFin);
+        }
+
+        if (_lesParam->tempsPartieModifie())
+        {
+            //Modification faite sur le temps de la partie
+            tempsPartie =_lesParam->getTemps();
+            tempsRestant = tempsPartie;
+            _laVue->majTimer(tempsPartie);
+        }
+        break;
+
+    case Modele::partieTerminee:
+
+        if (_lesParam->nomModifie())
+        {
+            //Modification faite sur le nom du joueur
+            nomJoueur = _lesParam->getNom();
+            _laVue->majNomJoueur(nomJoueur);
+        }
+
+        if (_lesParam->scoreFinModifie())
+        {
+            //Modification faite sur le nombre de points max
+            scoreFin = _lesParam->getScore();
+            _laVue->initScoreFin(scoreFin);
+        }
+
+        if (_lesParam->tempsPartieModifie())
+        {
+            //Modification faite sur le temps de la partie
+            tempsPartie =_lesParam->getTemps();
+        }
+
+        if (_lesParam->nomModifie() || _lesParam->scoreFinModifie() || _lesParam->tempsPartieModifie())
+        {
+            // -- Changement d'etat vers hors partie --
+            //Reinitialisations des scores, coups
+            _leModele->initCoups();
+            _leModele->initScores();
+
+            //Changement d etat
+            _leModele->setEtatJeu(Modele::horsPartie);
+
+            //Maj des elements graphiques lies
+            _laVue->majTimer(tempsPartie);
+            _laVue->majScoresCoups(0, 0, Modele::rien, Modele::rien);
+        }
+        break;
+
+    default:
+        break;
     }
 }
 
