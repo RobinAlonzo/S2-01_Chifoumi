@@ -171,6 +171,6 @@ void ChifoumiVue::aPropos()
 {
     QMessageBox maBox;
     maBox.setWindowTitle("A propos de cette application");
-    maBox.setText("Auteurs: Robin Alonzo, Nicolas Delahaie & Alexandre Pascal \nVersion : V3");
+    maBox.setText("Auteurs: Robin Alonzo, Nicolas Delahaie & Alexandre Pascal \nVersion : V7");
     maBox.exec();
 }

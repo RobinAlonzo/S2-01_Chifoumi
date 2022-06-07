@@ -1,6 +1,7 @@
 #include "parametres.h"
 #include "ui_parametres.h"
 
+
 Param::Param(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Param)

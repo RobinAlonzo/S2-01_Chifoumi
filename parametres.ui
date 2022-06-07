@@ -104,6 +104,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="bAnnuler">
+          <property name="focusPolicy">
+           <enum>Qt::NoFocus</enum>
+          </property>
           <property name="text">
            <string>Annuler</string>
           </property>

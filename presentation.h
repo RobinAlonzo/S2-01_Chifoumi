@@ -9,12 +9,13 @@
 
 class ChifoumiVue;
 class Param;
+class Db;
 class Presentation : public QObject
 {
     Q_OBJECT
 public:    
     //Initialisaitons
-    explicit Presentation(Modele* m, ChifoumiVue *v, Param *p, QObject* parent = nullptr);
+    explicit Presentation(Modele* m, ChifoumiVue *v, Param *p, Db *d, QObject* parent = nullptr);
 
     //Getters / Setters
     Modele* getModele();            //Récupere le modèle
@@ -23,6 +24,7 @@ public:
     QString getNomJoueur() const;
     unsigned int getScoreFin() const;
     unsigned int getTempsPartie() const;
+
     //Evenements
     void jouer(Modele::UnCoup);     //Joue en fonction du coup de l utilisateur
 
@@ -51,6 +53,7 @@ private:
     Modele *_leModele;          //Le modèle
     ChifoumiVue *_laVue;        //La vue
     Param *_lesParam;           //Le dialog
+    Db *_laDb;                  //La base de donnee
 
     //Timer
     QTimer *timer;              //Timer redemarre des que la durée est atteintewq<

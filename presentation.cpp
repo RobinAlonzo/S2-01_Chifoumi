@@ -1,13 +1,16 @@
 #include "presentation.h"
 #include "chifoumivue.h"
-#include <QMessageBox>
 #include "parametres.h"
+#include "db.h"
 
-Presentation::Presentation(Modele *m, ChifoumiVue *v, Param *p, QObject *parent)
+#include <QMessageBox>
+
+Presentation::Presentation(Modele *m, ChifoumiVue *v, Param *p, Db *d, QObject *parent)
     : QObject{parent}
     , _leModele(m)
     , _laVue(v)
     , _lesParam(p)
+    , _laDb(d)
 {
     timer = new QTimer(this);
 
@@ -26,10 +29,15 @@ Presentation::Presentation(Modele *m, ChifoumiVue *v, Param *p, QObject *parent)
     _laVue->majTimer(tempsRestant);
     timer->setInterval(100);
 
-    v->connexionPresentation(this);
-    p->connexionPresentation(this, nomJoueur, scoreFin, tempsPartie);
+    //Initialisation page identification
+    connect(_laDb, SIGNAL(idJustes()), _laVue, SLOT(show()));
 
-    _laVue->show();
+    //Conexion des elements graphiques a la presentation
+    _laVue->connexionPresentation(this);
+    _lesParam->connexionPresentation(this, nomJoueur, scoreFin, tempsPartie);
+
+    _laDb->show();
+
 }
 
 

@@ -2,6 +2,7 @@
 #include "chifoumivue.h"
 #include "modele.h"
 #include "parametres.h"
+#include "db.h"
 
 #include <QApplication>
 
@@ -9,11 +10,12 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    Modele *m = new Modele();               //Creation du modèle
-    ChifoumiVue *v = new ChifoumiVue;       //Creation de la vue
-    Param *d = new Param(v);                //Creation du la page de parametres qui a pour parent la vue
+    Modele *modele = new Modele();                                  //Creation du modèle
+    ChifoumiVue *vue = new ChifoumiVue;                             //Creation de la vue
+    Param *param = new Param(vue);                                  //Creation du la page de parametres, fils de la vue
+    Db *db = new Db(vue);                                           //Creation de la page d identification, fils de la vue
 
-    Presentation *p = new Presentation(m, v, d);  //Creation de la présentation et son association au modèle
+    Presentation *p = new Presentation(modele, vue, param, db);     //Creation de la présentation et son association au modèle
 
     return a.exec();
 }
