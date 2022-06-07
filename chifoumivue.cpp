@@ -10,6 +10,10 @@ ChifoumiVue ::ChifoumiVue(QWidget *parent)
     , ui(new Ui::ChifoumiVue)
 {
     ui->setupUi(this);
+
+    //Conection des actions aux slots
+    QObject::connect(ui->actionQuitter, SIGNAL(triggered()),qApp,SLOT(quit()));     //Permet de fermer l'application
+    QObject::connect(ui->actionA_propos, SIGNAL(triggered()),this,SLOT(aPropos())); //Permet d'afficher une box indiquant la version et les créateurs
 }
 ChifoumiVue ::~ChifoumiVue()
 {
@@ -115,3 +119,11 @@ void ChifoumiVue::focusBJouer()
     ui->boutonPartie->setFocus();
 }
 
+
+void ChifoumiVue::aPropos()
+{
+    QMessageBox maBox;
+    maBox.setWindowTitle("A propos de cette application");
+    maBox.setText("Auteurs: Robin Alonzo, Nicolas Delahaie & Alexandre Pascal \nVersion : V3");
+    maBox.exec();
+}

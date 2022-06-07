@@ -33,6 +33,11 @@ public:
     //Autre
     void setJoueurEnBleu(bool); //Met la partie du joueur en bleu ou en noir en fonction du booleen
     void focusBJouer();         //Met le focus sur le bouton de partie
+
+public slots:
+    //Slots internes
+    void aPropos();             //Affiche une box indiquant la version et les créateurs
+
 private:
     Ui::ChifoumiVue *ui;
 };
