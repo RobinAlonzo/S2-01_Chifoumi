@@ -19,29 +19,39 @@ ChifoumiVue ::~ChifoumiVue()
 {
     delete ui;
 }
-void ChifoumiVue::conexionPresentation(QObject *p)
+void ChifoumiVue::connexionPresentation(QObject *p)
 {
     //pour se connecter avec la presentation
      QObject::connect(ui->boutonPartie,SIGNAL(clicked()),p,SLOT(demanderNouvellePartie()));
      QObject::connect(ui->boutonCiseau, SIGNAL(clicked()),p,SLOT(demanderCiseau()));
      QObject::connect(ui->boutonPierre, SIGNAL(clicked()),p,SLOT(demanderPierre()));
      QObject::connect(ui->boutonPapier, SIGNAL(clicked()),p,SLOT(demanderPapier()));
+     QObject::connect(ui->boutonPause, SIGNAL(clicked()), p, SLOT(start_stop_timer()));
 }
-void ChifoumiVue::deconexionPresentation(QObject *p)
+void ChifoumiVue::deconnexionPresentation(QObject *p)
 {
     //pour se deconnecter de la presentation
      QObject::disconnect(ui->boutonPartie,SIGNAL(clicked()),p,SLOT(demanderNouvellePartie()));
      QObject::disconnect(ui->boutonCiseau, SIGNAL(clicked()),p,SLOT(demanderCiseau()));
      QObject::disconnect(ui->boutonPierre, SIGNAL(clicked()),p,SLOT(demanderPierre()));
      QObject::disconnect(ui->boutonPapier, SIGNAL(clicked()),p,SLOT(demanderPapier()));
+     QObject::disconnect(ui->boutonPause, SIGNAL(clicked()), p, SLOT(start_stop_timer()));
 }
 
 
-void ChifoumiVue::setEtatBoutonsJeux(bool b)
+void ChifoumiVue::setEtatsBJeu(bool b)
 {
     ui->boutonCiseau->setEnabled(b);
     ui->boutonPapier->setEnabled(b);
     ui->boutonPierre->setEnabled(b);
+}
+void ChifoumiVue::setEtatBPause(bool b)
+{
+    ui->boutonPause->setEnabled(b);
+}
+void ChifoumiVue::setEtatBPartie(bool b)
+{
+    ui->boutonPartie->setEnabled(b);
 }
 
 
@@ -103,8 +113,6 @@ void ChifoumiVue::initScoreFin(unsigned int scoreFin)
 {
     ui->labelScoreFin->setText(QString::number(scoreFin));
 }
-
-
 void ChifoumiVue::setJoueurEnBleu(bool bleu)
 {
     if (bleu)
@@ -118,37 +126,26 @@ void ChifoumiVue::setJoueurEnBleu(bool bleu)
         ui->labelVous->setStyleSheet(styleSheet());
     }
 }
-void ChifoumiVue::focusBJouer()
+void ChifoumiVue::majTimer(unsigned int  tempsRestant)
+{
+    QString contenu("Temps restant : ");
+    contenu.append(QString::number(tempsRestant));
+    ui->labelTimer->setText(contenu);
+}
+
+void ChifoumiVue::majLabelBPause(QString message)
+{
+    ui->boutonPause->setText(message);
+}
+
+
+void ChifoumiVue::setFocusBJouer()
 {
     ui->boutonPartie->setFocus();
 }
-void ChifoumiVue::affichageFin(unsigned int scoreJoueur, unsigned int scoreMachine)
+void ChifoumiVue::setFocusBPause()
 {
-    // -- Maj de l interface --
-    QMessageBox boiteFin;
-    boiteFin.setWindowTitle("Game over");
-    QString messageFin;
-
-
-    //Gestion des scores finaux
-    if (scoreJoueur > scoreMachine)
-    {
-        //Joueur gagne
-        messageFin.append("Joueur gagne avec " + QString::number(scoreJoueur) + " points.");
-    }
-    else if (scoreJoueur < scoreMachine)
-    {
-        //Machine gagne
-        messageFin.append("Machine gagne avec " + QString::number(scoreMachine) + " points.");
-    }
-    else
-    {
-        //Aucun gagnant (scores egaux)
-        messageFin.append(" aucun gagnant.");
-    }
-
-    boiteFin.setText(messageFin);
-    boiteFin.exec();
+    ui->boutonPause->setFocus();
 }
 
 

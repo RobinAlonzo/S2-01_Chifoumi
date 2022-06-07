@@ -17,11 +17,13 @@ public:
     //initialisation
     ChifoumiVue (QWidget *parent = nullptr);        //Constructeur du chifoumiVue
     ~ChifoumiVue ();                                //Destructeur du chifoumiVue
-    void conexionPresentation(QObject *);           //Connexion à la présentation
-    void deconexionPresentation(QObject *);         //Deconnexion de la présentation
+    void connexionPresentation(QObject *);          //Connexion à la présentation
+    void deconnexionPresentation(QObject *);        //Deconnexion de la présentation
 
     //Maj des boutons
-    void setEtatBoutonsJeux(bool);                      //Active/Desactive les boutons de jeux
+    void setEtatsBJeu(bool);                        //Active/Desactive les boutons de jeu
+    void setEtatBPause(bool);                       //Active/Desactive le bouton de pause
+    void setEtatBPartie(bool);                      //Active/Desactive le bouton de partie
 
     //Maj des labels
     void majImageCoupMachine(Modele::UnCoup);       //Met à jour l image du coup de la machine en fonction du coup en parametre
@@ -30,12 +32,13 @@ public:
     void majLabelScoreJoueur(unsigned int);         //Met à jour le label représentant le score du joueur en fonction du nombre en parametre
     void majScoresCoups(unsigned int, unsigned int, Modele::UnCoup, Modele::UnCoup);    //Met a jour l ensemble des elements graphiques de scores et de coups en fonction des parametres.
     void initScoreFin(unsigned int);                //Initialise le score de fin
+    void setJoueurEnBleu(bool);                     //Met la partie du joueur en bleu ou en noir en fonction du booleen
+    void majTimer(unsigned int);                    //Met a jour le label du temps restant en fonction du parametre
+    void majLabelBPause(QString);                   //Change le label du bouton de pause
 
-    //Autre
-    void setJoueurEnBleu(bool);                         //Met la partie du joueur en bleu ou en noir en fonction du booleen
-    void focusBJouer();                                 //Met le focus sur le bouton de parties
-    void affichageFin(unsigned int scoreJoueur, unsigned int scoreMachine);      //Affiche un dialog indiquant le gagnant et les modalités, tout en stoppant le timer et grisant les boutons, empêchant de continuer de jouer
-
+    //Focus
+    void setFocusBJouer();                          //Met le focus sur le bouton de parties
+    void setFocusBPause();                          //Met le focus sur le bouton de pause
 
 public slots:
     //Slots internes

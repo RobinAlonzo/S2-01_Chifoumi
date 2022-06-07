@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     Presentation *p = new Presentation(m);  //Creation de la présentation et son association au modèle
     ChifoumiVue v;                          //Creation de la vue
     p->conexionVue(&v);                     //Association de la vue à la présentation et initialisation de la vue (score de fin)
-    v.conexionPresentation(p);              //Connexion des signaux de la vue avec les slots de la présentation
+    v.connexionPresentation(p);              //Connexion des signaux de la vue avec les slots de la présentation
 
     v.show();
     return a.exec();
