@@ -19,6 +19,7 @@ public:
     explicit Db(QWidget *parent = nullptr);
     ~Db();
     void conexionPresentation(Presentation *p);
+    void inserererResultat(QString nomJoueur, unsigned int scoreJoueur, unsigned int scoreMachine);          //Permet d'inserer les résultats en fin de partie dans la BDD
 
 private slots:
     void analyseIdentifiants();                 //En fonction des identifiatns juste ou faux : affiche un message d'erreur ou ouvre la page principale

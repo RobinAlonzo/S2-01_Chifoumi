@@ -78,3 +78,26 @@ void Db::analyseIdentifiants()
     db.close(); //Fermeture de la BDD après requête
 }
 
+void Db::inserererResultat(QString nomJoueur, unsigned int scoreJoueur, unsigned int scoreMachine)
+{
+    //Ouverture de la BDD
+    if (!db.open())
+    {
+        qDebug() << "Connexion ratée";
+    }
+    else
+    {
+        QSqlQuery query;
+        query.exec("CREATE TABLE Resultat (nomJoueur varchar(20), nomMachine varchar(20), scoreJoueur int(10), scoreMachine int(10))");
+        QSqlQuery resultat;
+        resultat.prepare("INSERT INTO Resultat (nomJoueur, nomMachine, scoreJoueur, scoreMachine)"
+                         "VALUES (:Joueur, :Machine, :scoreJ, :scoreM)");
+        resultat.bindValue(":Joueur", nomJoueur);
+        resultat.bindValue(":Machine", "Machine");
+        resultat.bindValue(":scoreJ", scoreJoueur);
+        resultat.bindValue(":scoreM", scoreMachine);
+        resultat.exec();
+    }
+    db.close();
+}
+
