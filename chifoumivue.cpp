@@ -37,7 +37,7 @@ void ChifoumiVue::deconexionPresentation(QObject *p)
 }
 
 
-void ChifoumiVue::setEtatBoutons(bool b)
+void ChifoumiVue::setEtatBoutonsJeux(bool b)
 {
     ui->boutonCiseau->setEnabled(b);
     ui->boutonPapier->setEnabled(b);
@@ -99,6 +99,10 @@ void ChifoumiVue::majScoresCoups(int unsigned scoreJoueur, int unsigned scoreMac
     majLabelScoreMachine(scoreMachine);
     majLabelScoreJoueur(scoreJoueur);
 }
+void ChifoumiVue::initScoreFin(unsigned int scoreFin)
+{
+    ui->labelScoreFin->setText(QString::number(scoreFin));
+}
 
 
 void ChifoumiVue::setJoueurEnBleu(bool bleu)
@@ -117,6 +121,34 @@ void ChifoumiVue::setJoueurEnBleu(bool bleu)
 void ChifoumiVue::focusBJouer()
 {
     ui->boutonPartie->setFocus();
+}
+void ChifoumiVue::affichageFin(unsigned int scoreJoueur, unsigned int scoreMachine)
+{
+    // -- Maj de l interface --
+    QMessageBox boiteFin;
+    boiteFin.setWindowTitle("Game over");
+    QString messageFin;
+
+
+    //Gestion des scores finaux
+    if (scoreJoueur > scoreMachine)
+    {
+        //Joueur gagne
+        messageFin.append("Joueur gagne avec " + QString::number(scoreJoueur) + " points.");
+    }
+    else if (scoreJoueur < scoreMachine)
+    {
+        //Machine gagne
+        messageFin.append("Machine gagne avec " + QString::number(scoreMachine) + " points.");
+    }
+    else
+    {
+        //Aucun gagnant (scores egaux)
+        messageFin.append(" aucun gagnant.");
+    }
+
+    boiteFin.setText(messageFin);
+    boiteFin.exec();
 }
 
 

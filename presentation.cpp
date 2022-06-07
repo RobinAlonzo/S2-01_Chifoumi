@@ -10,6 +10,9 @@ Presentation::Presentation(Modele *m, QObject *parent)
 void Presentation::conexionVue(ChifoumiVue *v)
 {
     _laVue = v;
+    //Initialisation score max
+    scoreFin = 3;
+    _laVue->initScoreFin(scoreFin);
 }
 
 
@@ -33,21 +36,55 @@ void Presentation::jouer(Modele::UnCoup c)
         _leModele->setCoupMachine(_leModele->genererUnCoup());
         _leModele->majScores(_leModele->determinerGagnant());
 
-        // -- changement d'état --
-        _leModele->setEtatJeu(Modele::partieEnCours);
 
-        // -- mise à jour de l'interface --
-        _laVue->majScoresCoups(_leModele->getScoreJoueur(), _leModele->getScoreMachine(), _leModele->getCoupJoueur(), _leModele->getCoupMachine());
-        _laVue->setJoueurEnBleu(false);
-        _laVue->focusBJouer();
+        if (scoreAtteint())
+        {
+            // -- changement d'état --
+            _leModele->setEtatJeu(Modele::partieTerminee);
+            // -- mise à jour de l'interface --
+            _laVue->majScoresCoups(_leModele->getScoreJoueur(), _leModele->getScoreMachine(), _leModele->getCoupJoueur(), _leModele->getCoupMachine());
+            _laVue->setJoueurEnBleu(false);
+            _laVue->focusBJouer();
+            _laVue->setEtatBoutonsJeux(false);
+            _laVue->affichageFin(_leModele->getScoreJoueur(),  _leModele->getScoreMachine());
+        }
+        else
+        {
+            // -- changement d'état --
+            _leModele->setEtatJeu(Modele::partieEnCours);
+            // -- mise à jour de l'interface --
+            _laVue->majScoresCoups(_leModele->getScoreJoueur(), _leModele->getScoreMachine(), _leModele->getCoupJoueur(), _leModele->getCoupMachine());
+            _laVue->setJoueurEnBleu(false);
+            _laVue->focusBJouer();
+        }
     }
-
+    else if (_leModele->getEtatJeu() == Modele::partieTerminee)
+    {
+        // Activite X
+        // -- mise a jour du modele --
+        // -- changement d'état --
+        // -- mise à jour de l'interface --
+    }
     else
     {
         // Activite X
         // -- mise a jour du modele --
         // -- changement d'état --
         // -- mise à jour de l'interface --
+    }
+}
+
+
+bool Presentation::scoreAtteint()
+{
+    if ((_leModele->getScoreJoueur() == scoreFin) ||
+        (_leModele->getScoreMachine() == scoreFin))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
 
@@ -62,7 +99,7 @@ void Presentation::demanderNouvellePartie()
         // -- changement d'état --
         _leModele->setEtatJeu(Modele::partieEnCours);
         // -- mise à jour de l'interface --
-        _laVue->setEtatBoutons(true);
+        _laVue->setEtatBoutonsJeux(true);
         _laVue->setJoueurEnBleu(true);
         _laVue->focusBJouer();
     }
@@ -79,7 +116,21 @@ void Presentation::demanderNouvellePartie()
         _laVue->majScoresCoups(_leModele->getScoreJoueur(), _leModele->getScoreMachine(), _leModele->getCoupJoueur(), _leModele->getCoupMachine());   //Maj des elements graphiques et coloration en bleu
         _laVue->setJoueurEnBleu(true);
         _laVue->focusBJouer();
-
+    }
+    else
+    {
+        //Partie terminee
+        // Activite 5
+        // -- mise a jour du modele --
+        _leModele->initCoups();
+        _leModele->initScores();
+        // -- changement d'état --
+        _leModele->setEtatJeu(Modele::partieEnCours);
+        // -- mise à jour de l'interface --
+        _laVue->majScoresCoups(_leModele->getScoreJoueur(), _leModele->getScoreMachine(), _leModele->getCoupJoueur(), _leModele->getCoupMachine());   //Maj des elements graphiques et coloration en bleu
+        _laVue->setJoueurEnBleu(true);
+        _laVue->setEtatBoutonsJeux(true);
+        _laVue->focusBJouer();
     }
 }
 void Presentation::demanderCiseau()

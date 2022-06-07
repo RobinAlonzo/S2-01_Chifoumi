@@ -17,7 +17,7 @@ class Modele
         ///* Une definition de type enumere
     public:
         enum UnCoup {pierre, papier, ciseau, rien};
-        enum UnEtat {horsPartie, partieEnCours};
+        enum UnEtat {horsPartie, partieEnCours, partieTerminee};
 
         ///* Methodes du Mod�le
     public:

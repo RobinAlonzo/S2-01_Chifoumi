@@ -19,10 +19,13 @@ public:
     Modele* getModele();            //Récupere le modèle
     ChifoumiVue* getVue();          //Récupere la vue
     void setModele(Modele *m);      //Associe le modèle à la présentation
-    void conexionVue(ChifoumiVue*); //Lie la vue a la presentation
+    void conexionVue(ChifoumiVue*); //Lie la vue a la presentation et l'initialise (score de fin)
 
     //Evenements
     void jouer(Modele::UnCoup);     //Joue en fonction du coup de l utilisateur
+
+    //Gardes
+    bool scoreAtteint();            //Indique si la partie est terminée par le score atteint
 
 public slots:
     //Slots externes (activés par la vue)
@@ -35,6 +38,9 @@ private:
     //Composantes
     Modele *_leModele;      //Le modèle
     ChifoumiVue *_laVue;    //La vue
+
+    //Proprietes
+    unsigned int scoreFin;  //Score défini a l'avance au bout duquel la partie se termine si un des joueur l'atteint
 };
 
 #endif // PRESENTATION_H

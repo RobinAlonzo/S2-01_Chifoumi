@@ -21,7 +21,7 @@ public:
     void deconexionPresentation(QObject *);         //Deconnexion de la présentation
 
     //Maj des boutons
-    void setEtatBoutons(bool);                      //Active/Desactive les boutons de jeux
+    void setEtatBoutonsJeux(bool);                      //Active/Desactive les boutons de jeux
 
     //Maj des labels
     void majImageCoupMachine(Modele::UnCoup);       //Met à jour l image du coup de la machine en fonction du coup en parametre
@@ -29,10 +29,13 @@ public:
     void majLabelScoreMachine(unsigned int);        //Met à jour le label représentant le score de la machine en fonction du nombre en parametre
     void majLabelScoreJoueur(unsigned int);         //Met à jour le label représentant le score du joueur en fonction du nombre en parametre
     void majScoresCoups(unsigned int, unsigned int, Modele::UnCoup, Modele::UnCoup);    //Met a jour l ensemble des elements graphiques de scores et de coups en fonction des parametres.
+    void initScoreFin(unsigned int);                //Initialise le score de fin
 
     //Autre
-    void setJoueurEnBleu(bool); //Met la partie du joueur en bleu ou en noir en fonction du booleen
-    void focusBJouer();         //Met le focus sur le bouton de partie
+    void setJoueurEnBleu(bool);                         //Met la partie du joueur en bleu ou en noir en fonction du booleen
+    void focusBJouer();                                 //Met le focus sur le bouton de parties
+    void affichageFin(unsigned int scoreJoueur, unsigned int scoreMachine);      //Affiche un dialog indiquant le gagnant et les modalités, tout en stoppant le timer et grisant les boutons, empêchant de continuer de jouer
+
 
 public slots:
     //Slots internes
