@@ -31,7 +31,6 @@ private slots:
     void param2modifie();               //SLOT permettant de modifier létat de _pointsModifies
     void param3modifie();               //SLOT permettant de modifier l'état de _tempsModifie
 
-
 private:
     Ui::Param *ui;
 

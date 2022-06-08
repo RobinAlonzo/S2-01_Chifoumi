@@ -1,35 +1,29 @@
 #ifndef DB_H
 #define DB_H
 
-#include <QDialog>
+#include <QObject>
 #include <QSqlDatabase>
-
-#include "presentation.h"
+#include <QSqlRecord>
+#include <QList>
 
 #define CONNECT_TYPE "QODBC"
-#define DB_NAME "BDD_NDELAHAIE_BD"
+#define DB_NAME "ndelahaie_bd"
 
-namespace Ui {class Db;}
-
-class Db : public QDialog
+class Db : public QObject
 {
     Q_OBJECT
-
 public:
-    explicit Db(QWidget *parent = nullptr);
-    ~Db();
-    void conexionPresentation(Presentation *p);
-    void inserererResultat(QString nomJoueur, unsigned int scoreJoueur, unsigned int scoreMachine);          //Permet d'inserer les résultats en fin de partie dans la BDD
+    explicit Db(QObject *parent = nullptr);
 
-private slots:
-    void analyseIdentifiants();                 //En fonction des identifiatns juste ou faux : affiche un message d'erreur ou ouvre la page principale
+    void insererResultat(QString nomJoueur, unsigned int scoreJoueur, unsigned int scoreMachine);          //Permet d'inserer les résultats en fin de partie dans la BDD
 
-signals:
-    void idJustes();                            //Signal qui ferme la fentre pour afficher le jeux
+public slots:
+    unsigned short int analyseIdentifiants(QString id, QString mdp);    //Retourne 0 si les identifiants sont justes, 1 si l' identifiant est faux, 2 si le mdp est faux, 3 si la base de donnee ne s est pas ouverte
+    void getScores(QList<QString> &nomJoueur, QList<QString> &scoreJoueur, QList<QString> &nomMachine, QList<QString> &scoreMachine);                                             //Retourne l enregistrement des scores
 
 private:
-    Ui::Db *ui;
     QSqlDatabase db;
+
 };
 
 #endif // DB_H

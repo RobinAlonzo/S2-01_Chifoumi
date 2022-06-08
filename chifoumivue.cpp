@@ -29,6 +29,7 @@ void ChifoumiVue::connexionPresentation(QObject *p)
      QObject::connect(ui->boutonPapier, SIGNAL(clicked()),p,SLOT(demanderPapier()));
      QObject::connect(ui->boutonPause, SIGNAL(clicked()), p, SLOT(start_stop_timer()));
      QObject::connect(ui->actionParametres, SIGNAL(triggered()), p, SLOT(clicParametres()));
+     QObject::connect(ui->actionResultats, SIGNAL(triggered()), p, SLOT(clicResultats()));
 }
 void ChifoumiVue::deconnexionPresentation(QObject *p)
 {
@@ -139,6 +140,11 @@ void ChifoumiVue::setEtatActionParam(bool b)
 {
     ui->actionParametres->setEnabled(b);
 }
+
+void ChifoumiVue::setEtatActionScores(bool b)
+{
+    ui->actionResultats->setEnabled(b);
+}
 void ChifoumiVue::majTimer(unsigned int  tempsRestant)
 {
     QString contenu("Temps restant : ");
@@ -171,6 +177,6 @@ void ChifoumiVue::aPropos()
 {
     QMessageBox maBox;
     maBox.setWindowTitle("A propos de cette application");
-    maBox.setText("Auteurs: Robin Alonzo, Nicolas Delahaie & Alexandre Pascal \nVersion : V7");
+    maBox.setText("Auteurs: Robin Alonzo, Nicolas Delahaie & Alexandre Pascal \nVersion : V9");
     maBox.exec();
 }

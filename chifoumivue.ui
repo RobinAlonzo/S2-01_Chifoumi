@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>362</width>
-    <height>413</height>
+    <width>381</width>
+    <height>428</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -63,6 +63,7 @@
         <property name="font">
          <font>
           <pointsize>11</pointsize>
+          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -97,6 +98,7 @@
         <property name="font">
          <font>
           <pointsize>14</pointsize>
+          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -116,6 +118,7 @@
         <property name="font">
          <font>
           <pointsize>14</pointsize>
+          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -169,6 +172,7 @@
         <property name="font">
          <font>
           <pointsize>11</pointsize>
+          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -237,7 +241,19 @@
          <property name="enabled">
           <bool>false</bool>
          </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>80</height>
+          </size>
+         </property>
+         <property name="maximumSize">
           <size>
            <width>80</width>
            <height>80</height>
@@ -256,6 +272,12 @@
            <height>80</height>
           </size>
          </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
        <item>
@@ -263,7 +285,19 @@
          <property name="enabled">
           <bool>false</bool>
          </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>80</height>
+          </size>
+         </property>
+         <property name="maximumSize">
           <size>
            <width>80</width>
            <height>80</height>
@@ -282,6 +316,12 @@
            <height>80</height>
           </size>
          </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
        <item>
@@ -289,7 +329,19 @@
          <property name="enabled">
           <bool>false</bool>
          </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>80</height>
+          </size>
+         </property>
+         <property name="maximumSize">
           <size>
            <width>80</width>
            <height>80</height>
@@ -307,6 +359,12 @@
            <width>80</width>
            <height>80</height>
           </size>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -370,8 +428,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>362</width>
-     <height>22</height>
+     <width>381</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFichier">
@@ -380,6 +438,7 @@
     </property>
     <addaction name="actionQuitter"/>
     <addaction name="actionParametres"/>
+    <addaction name="actionResultats"/>
    </widget>
    <widget class="QMenu" name="menuAide_2">
     <property name="title">
@@ -412,6 +471,14 @@
    </property>
    <property name="shortcut">
     <string>F2</string>
+   </property>
+  </action>
+  <action name="actionResultats">
+   <property name="text">
+    <string>Resultats</string>
+   </property>
+   <property name="shortcut">
+    <string>F3</string>
    </property>
   </action>
  </widget>

@@ -10,12 +10,14 @@
 class ChifoumiVue;
 class Param;
 class Db;
+class Identification;
+class Scores;
 class Presentation : public QObject
 {
     Q_OBJECT
 public:    
     //Initialisaitons
-    explicit Presentation(Modele* m, ChifoumiVue *v, Param *p, Db *d, QObject* parent = nullptr);
+    explicit Presentation(Modele* m, ChifoumiVue *v, Param *p, Db *db, Identification *id, Scores *score, QObject* parent = nullptr);
 
     //Getters / Setters
     Modele* getModele();            //Récupere le modèle
@@ -32,7 +34,9 @@ public:
     bool scoreAtteint();            //Indique si la partie est terminée par le score atteint
     bool tempsEpuise();             //Indique si la partie est terminée par le temps (timer = 0)
 
-    void affichageFin();  //Affiche un dialog indiquant le gagnant avec son score et le temps restant
+    //Affichages
+    void affichageFin();            //Affiche un dialog indiquant le gagnant avec son score et le temps restant
+    void demarrerAffichage();       //Demarre l affichage
 
 public slots:
     //Slots externes (activés par la vue)
@@ -43,17 +47,22 @@ public slots:
     void start_stop_timer();        //Slot activé par le bouton pause qui met en pause ou redémarre le timer
     void clicParametres();          //Slot activé par le bouton des parametres, lance la fenetre des parametres
     void modifParametres();         //Slot activé par le bouton valider dans les parametres, modifie les parametres de la presentation en consequent
+    void clicResultats();           //Slot activé par le bouton Resultats
+
+    void analyseIdentifiants(QString, QString); //Interroge la base de donnee et met a jour les elements graphiques en fonction de la validite des identifiants
 
 private slots:
     //Slots internes (activés par la presentation)
-    void gererTimer();              //Slot activé par la clock qui met a jour les elements en fonction du temps (maj graphique, pause du jeux du le temps utilisé...)
+    void gererTimer();                                //Slot activé par la clock qui met a jour les elements en fonction du temps (maj graphique, pause du jeux du le temps utilisé...)
 
 private:
     //Composantes
-    Modele *_leModele;          //Le modèle
-    ChifoumiVue *_laVue;        //La vue
-    Param *_lesParam;           //Le dialog
-    Db *_laDb;                  //La base de donnee
+    Modele *_leModele;                  //Le modèle
+    ChifoumiVue *_laVue;                //La vue
+    Param *_lesParam;                   //Le dialog
+    Db *_laDb;                          //La base de donnee
+    Identification *_identification;    //La page d identification
+    Scores *_lesScores;                 //Les scores
 
     //Timer
     QTimer *timer;              //Timer redemarre des que la durée est atteintewq<

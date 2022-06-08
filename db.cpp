@@ -1,103 +1,99 @@
 #include "db.h"
-#include "ui_db.h"
+#include "qdebug.h"
+#include "qsqlquery.h"
 
-#include <QSqlQuery>
-#include <QSqlRecord>
-#include <QDebug>
 #include <QMessageBox>
-#include <QDebug>
+#include <QSqlRecord>
+#include <QSqlField>
 
-Db::Db(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::Db)
+Db::Db(QObject *parent)
+    : QObject{parent}
 {
-    ui->setupUi(this);
-
     //Initialisation des informations de la BDD
     db= QSqlDatabase::addDatabase(CONNECT_TYPE);
     db.setDatabaseName(DB_NAME);
-
-    //Ferme le fenetre lorsqu'on clique sur le bouton quitter ou que les identifiants sont valides
-    QObject::connect(ui->bQuitter, SIGNAL(clicked()), this, SLOT(close()));
-    QObject::connect(this, SIGNAL(idJustes()), this, SLOT(close()));
-
-    QObject::connect(ui->bValider, SIGNAL(clicked()), this, SLOT(analyseIdentifiants()));
-
-
-    ui->lineEditMdp->setEchoMode(QLineEdit::EchoMode::Password); //Permet de masquer la lineEditMdp
 }
 
-Db::~Db()
-{
-    delete ui;
-}
 
-void Db::analyseIdentifiants()
+void Db::insererResultat(QString nomJoueur, unsigned int scoreJoueur, unsigned int scoreMachine)
 {
     //Ouverture de la BDD
     if (!db.open())
     {
-        qDebug() << "Connexion ratée";
-    }
-    QSqlQuery mdp;
-    mdp.prepare("SELECT motDePasse FROM Utilisateur WHERE nom = ?");
-    mdp.addBindValue(ui->lineEditId->text());
-    mdp.exec();
-    if (!mdp.next())
-    {
-        //Identifiant inexistant
-        //Affichage du message d erreur
-        QMessageBox msgErreur(this);
-        msgErreur.setText("Identifiant inexistant");
-        msgErreur.exec();
-
-        //Effacement de la combinaison ratee
-        ui->lineEditId->setText("");
-        ui->lineEditMdp->setText("");
-
-        //Remise du focus sur la premiere ligne
-        ui->lineEditId->setFocus();
-    }
-    else if (mdp.value(0).toString() == ui->lineEditMdp->text())
-    {
-        //Mot de passe correspondant a l identfiant
-        emit idJustes();
+        qDebug() << "Connexion ratée, impossible d ajouter des scores";
     }
     else
     {
-        //Mot de passe incorrecte
-        //Affichage du message d erreur
-        QMessageBox msgErreur(this);
-        msgErreur.setText("Mot de passe incorrecte");
-        msgErreur.exec();
-
-        //Effacement du mdp rate
-        ui->lineEditMdp->setText("");
+        QSqlQuery createTable;
+        createTable.exec("CREATE TABLE Resultat (id INT PRIMARY KEY NOT NULL AUTO_INCREMENT, nomJoueur VARCHAR(20), scoreJoueur INT(10), nomMachine VARCHAR(20), scoreMachine INT(10))");
+        QSqlQuery insertResultat;
+        insertResultat.prepare("INSERT INTO Resultat (nomJoueur, scoreJoueur, nomMachine, scoreMachine) VALUES (:Joueur, :scoreJ, :Machine, :scoreM)");
+        insertResultat.bindValue(":Joueur", nomJoueur);
+        insertResultat.bindValue(":scoreJ", scoreJoueur);
+        insertResultat.bindValue(":Machine", "Machine");
+        insertResultat.bindValue(":scoreM", scoreMachine);
+        insertResultat.exec();
+        db.close();
     }
-
-    db.close(); //Fermeture de la BDD après requête
 }
 
-void Db::inserererResultat(QString nomJoueur, unsigned int scoreJoueur, unsigned int scoreMachine)
+
+
+unsigned short int Db::analyseIdentifiants(QString id, QString mdp)
 {
     //Ouverture de la BDD
-    if (!db.open())
+
+    if (db.open())
     {
-        qDebug() << "Connexion ratée";
+        QSqlQuery req;
+        req.prepare("SELECT motDePasse FROM Utilisateur WHERE nom = ?");
+        req.addBindValue(id);
+        req.exec();
+        if (!req.next())
+        {
+            //Identifiant inexistant
+            return 1;
+        }
+        else if (req.value(0).toString() == mdp)
+        {
+            //Mot de passe correspondant a l identfiant
+            return 0;
+        }
+        else
+        {
+            //Mot de passe incorrecte
+            return 2;
+        }
+
+        db.close(); //Fermeture de la BDD après requête
     }
     else
+    {
+        qDebug() << "Connexion ratée";
+        return 3;
+    }
+}
+
+void Db::getScores(QList<QString> &nomJoueur, QList<QString> &scoreJoueur, QList<QString> &nomMachine, QList<QString> &scoreMachine)
+{
+    if (db.open())
     {
         QSqlQuery query;
-        query.exec("CREATE TABLE Resultat (nomJoueur varchar(20), nomMachine varchar(20), scoreJoueur int(10), scoreMachine int(10))");
-        QSqlQuery resultat;
-        resultat.prepare("INSERT INTO Resultat (nomJoueur, nomMachine, scoreJoueur, scoreMachine)"
-                         "VALUES (:Joueur, :Machine, :scoreJ, :scoreM)");
-        resultat.bindValue(":Joueur", nomJoueur);
-        resultat.bindValue(":Machine", "Machine");
-        resultat.bindValue(":scoreJ", scoreJoueur);
-        resultat.bindValue(":scoreM", scoreMachine);
-        resultat.exec();
+        query.exec("SELECT * FROM Resultat ORDER BY scoreJoueur DESC, scoreMachine ASC LIMIT 10");
+
+        while(query.next())
+        {
+            nomJoueur.append(query.value(1).toString());
+            scoreJoueur.append(query.value(2).toString());
+            nomMachine.append(query.value(3).toString());
+            scoreMachine.append(query.value(4).toString());
+        }
+        db.close();
     }
-    db.close();
+    else
+    {
+        qDebug() << "Impossible de recuperer les scores de la DB";
+    }
 }
+
 

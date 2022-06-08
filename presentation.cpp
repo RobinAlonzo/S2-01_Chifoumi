@@ -2,15 +2,21 @@
 #include "chifoumivue.h"
 #include "parametres.h"
 #include "db.h"
+#include "identification.h"
+#include "scores.h"
+#include <QDebug>
+
 
 #include <QMessageBox>
 
-Presentation::Presentation(Modele *m, ChifoumiVue *v, Param *p, Db *d, QObject *parent)
+Presentation::Presentation(Modele *m, ChifoumiVue *v, Param *p, Db *db, Identification *id, Scores *scores, QObject *parent)
     : QObject{parent}
     , _leModele(m)
     , _laVue(v)
     , _lesParam(p)
-    , _laDb(d)
+    , _laDb(db)
+    , _identification(id)
+    , _lesScores(scores)
 {
     timer = new QTimer(this);
 
@@ -29,14 +35,15 @@ Presentation::Presentation(Modele *m, ChifoumiVue *v, Param *p, Db *d, QObject *
     _laVue->majTimer(tempsRestant);
     timer->setInterval(100);
 
-    //Initialisation page identification
-    connect(_laDb, SIGNAL(idJustes()), _laVue, SLOT(show()));
+    //Conexion page identification à Db
+    QObject::connect(_identification, SIGNAL(validationId(const QString &, const QString &)), this, SLOT(analyseIdentifiants( const QString &, const QString &)));
 
-    //Conexion des elements graphiques a la presentation
+    //Conexion des elements graphiques des ui a la presentation
     _laVue->connexionPresentation(this);
     _lesParam->connexionPresentation(this, nomJoueur, scoreFin, tempsPartie);
 
-    _laDb->show();
+    _identification->show();
+    //_lesScores->show();
 
 }
 
@@ -78,8 +85,9 @@ void Presentation::jouer(Modele::UnCoup c)
                 _laVue->setEtatsBJeu(false);
                 _laVue->setEtatBPause(false);
                 _laVue->setEtatActionParam(true);
+                _laVue->setEtatActionScores(true);
                 affichageFin();
-                _laDb->inserererResultat(_laVue->getNomJoueur(),_leModele->getScoreJoueur(),_leModele->getScoreMachine());
+                _laDb->insererResultat(_laVue->getNomJoueur(),_leModele->getScoreJoueur(),_leModele->getScoreMachine());
             }
             else
             {
@@ -121,6 +129,8 @@ bool Presentation::scoreAtteint()
         return false;
     }
 }
+
+
 bool Presentation::tempsEpuise()
 {
     if (tempsRestant <= 0)
@@ -176,6 +186,11 @@ void Presentation::affichageFin()
     boiteFin.exec();
 }
 
+void Presentation::demarrerAffichage()
+{
+    _identification->show();
+}
+
 void Presentation::demanderNouvellePartie()
 {
     switch (_leModele->getEtatJeu())
@@ -193,6 +208,7 @@ void Presentation::demanderNouvellePartie()
             _laVue->setJoueurEnBleu(true);
             _laVue->setEtatBPause(true);
             _laVue->setEtatActionParam(false);
+            _laVue->setEtatActionScores(false);
         break;
         case Modele::partieEnCours:
             // Partie en cours
@@ -262,11 +278,13 @@ void Presentation::gererTimer()
             _laVue->setEtatsBJeu(false);
             _laVue->setEtatBPause(false);
             _laVue->setEtatActionParam(true);
+            _laVue->setEtatActionScores(true);
             affichageFin();
-            _laDb->inserererResultat(_laVue->getNomJoueur(),_leModele->getScoreJoueur(),_leModele->getScoreMachine());
+            _laDb->insererResultat(_laVue->getNomJoueur(),_leModele->getScoreJoueur(),_leModele->getScoreMachine());
         }
     }
 }
+
 void Presentation::start_stop_timer()
 {
     if (timer->isActive())
@@ -275,6 +293,7 @@ void Presentation::start_stop_timer()
         timer->stop();                          //Stop le timer
         _laVue->setEtatsBJeu(false);            //Desactive les boutons pour jouer
         _laVue->setEtatBPartie(false);          //Desactive le bouton pour recommencer une partie
+        _laVue->setEtatActionScores(true);      //Re actuve le bouton des resultats
         _laVue->majLabelBPause("Reprendre");    //Change le nom du bouton en "reprendre"
         _laVue->setFocusBPause();               //Met le focus sur le bouton de pause
     }
@@ -284,6 +303,7 @@ void Presentation::start_stop_timer()
         timer->start();                         //Démarre le timer
         _laVue->setEtatsBJeu(true);             //Re active les boutons de jeux
         _laVue->setEtatBPartie(true);           //Re active le bouton de partie
+        _laVue->setEtatActionScores(false);     //Re actuve le bouton des resultats
         _laVue->majLabelBPause("Pause");        //Change le nom du bouton en "Pause"
         _laVue->setFocusBJouer();               //Met le focus sur le bouton de partie
     }
@@ -366,5 +386,42 @@ void Presentation::modifParametres()
     default:
         break;
     }
+}
+
+void Presentation::analyseIdentifiants(QString id, QString mdp)
+{
+    switch (_laDb->analyseIdentifiants(id, mdp))
+    {
+    case 0:
+        //Identifiants correctes
+        _identification->close();
+        _laVue->show();
+        break;
+    case 1:
+        //Identifiant inexistant
+        _identification->majIdFaux();
+        break;
+    case 2:
+        //Mot de passe incorrecte
+        _identification->majMdpFaux();
+        break;
+    case 3:
+        //Db inaccessible
+        _identification->majDbInaccessible();
+        break;
+    default:
+        break;
+    }
+}
+
+void Presentation::clicResultats()
+{
+    QList<QString> nomJoueur;
+    QList<QString> scoreJoueur;
+    QList<QString> nomMachine;
+    QList<QString> scoreMachine;
+    _laDb->getScores(nomJoueur, scoreJoueur, nomMachine, scoreMachine);
+    _lesScores->majValeurs(nomJoueur, scoreJoueur, nomMachine, scoreMachine);
+    _lesScores->show();
 }
 

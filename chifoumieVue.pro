@@ -10,23 +10,28 @@ CONFIG += c++11
 
 SOURCES += \
     db.cpp \
+    identification.cpp \
     main.cpp \
     chifoumivue.cpp \
     modele.cpp \
     parametres.cpp \
-    presentation.cpp
+    presentation.cpp \
+    scores.cpp
 
 HEADERS += \
     chifoumivue.h \
     db.h \
+    identification.h \
     modele.h \
     parametres.h \
-    presentation.h
+    presentation.h \
+    scores.h
 
 FORMS += \
     chifoumivue.ui \
-    db.ui \
-    parametres.ui
+    identification.ui \
+    parametres.ui \
+    scores.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -29,6 +29,8 @@ public:
     void setEtatBPartie(bool);                      //Active/Desactive le bouton de partie
     void setJoueurEnBleu(bool);                     //Met la partie du joueur en bleu ou en noir en fonction du booleen
     void setEtatActionParam(bool);                  //Active / desactive l action de parametre
+    void setEtatActionScores(bool);                 //Active / desactive l action des resultats
+
 
     //Maj des labels
     void majImageCoupMachine(Modele::UnCoup);       //Met à jour l image du coup de la machine en fonction du coup en parametre

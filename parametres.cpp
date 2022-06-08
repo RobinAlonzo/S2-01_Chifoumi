@@ -38,6 +38,7 @@ void Param::deconnexionPresentation(Presentation *p)
 
 void Param::afficherDialog()
 {
+    //Initialisation des booleens
     _nomModifie = false;
     _pointsModifies = false;
     _tempsModifie = false;
