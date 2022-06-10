@@ -13,9 +13,11 @@ class Identification : public QDialog
 public:
     explicit Identification(QWidget *parent = nullptr);
     ~Identification();
+    void conexionPresentation(Presentation*);
 
 signals:
     void validationId(const QString& id, const QString& mdp);    //Renvoie un signal demandant la verification des identifiants mis en parametre
+    void hostMode();            //Indique si le joueur se connecte en mode host
 
 public slots:
     void majIdFaux();           //Met a jour les elements graphiques en consequence a l identifiant faux

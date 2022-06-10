@@ -132,25 +132,19 @@
       <enum>QLayout::SetMinimumSize</enum>
      </property>
      <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
       <widget class="QPushButton" name="bQuitter">
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="text">
         <string>Quitter</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="bHostMode">
+       <property name="text">
+        <string>Host Mode</string>
        </property>
       </widget>
      </item>
@@ -169,7 +163,6 @@
   <tabstop>lineEditId</tabstop>
   <tabstop>lineEditMdp</tabstop>
   <tabstop>bValider</tabstop>
-  <tabstop>bQuitter</tabstop>
  </tabstops>
  <resources/>
  <connections/>

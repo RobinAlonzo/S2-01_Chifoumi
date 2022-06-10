@@ -6,8 +6,9 @@
 #include <QSqlRecord>
 #include <QSqlField>
 
-Db::Db(QObject *parent)
+Db::Db(QString nomDb, QObject *parent)
     : QObject{parent}
+    , DB_NAME(nomDb)
 {
     //Initialisation des informations de la BDD
     db= QSqlDatabase::addDatabase(CONNECT_TYPE);
@@ -69,8 +70,8 @@ unsigned short int Db::analyseIdentifiants(QString id, QString mdp)
     }
     else
     {
-        qDebug() << "Connexion ratée";
-        return 3;
+        //Conexion ratee
+        return 0;
     }
 }
 
@@ -93,6 +94,22 @@ void Db::getScores(QList<QString> &nomJoueur, QList<QString> &scoreJoueur, QList
     else
     {
         qDebug() << "Impossible de recuperer les scores de la DB";
+    }
+}
+
+void Db::effacerScores()
+{
+    if (db.open())
+    {
+        QSqlQuery query;
+        query.exec("DELETE FROM Resultat");
+        qDebug() << "Yooo";
+
+        db.close();
+    }
+    else
+    {
+        qDebug() << "Impossible de supprimer des elements à la DB";
     }
 }
 

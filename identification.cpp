@@ -11,16 +11,21 @@ Identification::Identification(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //Ferme le fenetre lorsqu'on clique sur le bouton quitter
-    connect(ui->bQuitter, SIGNAL(clicked()), this, SLOT(close()));
-    connect(ui->bValider, SIGNAL(clicked()), this, SLOT(demandeVerif()));
-
-    ui->lineEditMdp->setEchoMode(QLineEdit::EchoMode::Password); //Permet de masquer le mot de passe
+    //Conexions
+    connect(ui->bQuitter, SIGNAL(clicked()), this, SLOT(close()));              //Ferme le fenetre lorsqu'on clique sur le bouton quitter
+    connect(ui->bValider, SIGNAL(clicked()), this, SLOT(demandeVerif()));       //Demande une verification des resultats
+    connect(ui->bHostMode, SIGNAL(clicked()), this, SIGNAL(hostMode()));
+    ui->lineEditMdp->setEchoMode(QLineEdit::EchoMode::Password);                //Permet de masquer le mot de passe
 }
 
 Identification::~Identification()
 {
     delete ui;
+}
+
+void Identification::conexionPresentation(Presentation *p)
+{
+    connect(ui->bHostMode, SIGNAL(clicked()), p, SLOT(setHostMode()));
 }
 
 void Identification::majIdFaux()

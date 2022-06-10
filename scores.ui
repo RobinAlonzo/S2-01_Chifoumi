@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>428</width>
-    <height>210</height>
+    <width>601</width>
+    <height>397</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -48,6 +48,13 @@
        <string>scoreMachine</string>
       </property>
      </column>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="bEffacer">
+     <property name="text">
+      <string>Reinitialiser les scores</string>
+     </property>
     </widget>
    </item>
   </layout>

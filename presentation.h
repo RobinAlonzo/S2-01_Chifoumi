@@ -16,6 +16,8 @@ class Presentation : public QObject
 {
     Q_OBJECT
 public:    
+    enum Modejoueur {login, host};
+
     //Initialisaitons
     explicit Presentation(Modele* m, ChifoumiVue *v, Param *p, Db *db, Identification *id, Scores *score, QObject* parent = nullptr);
 
@@ -47,10 +49,10 @@ public slots:
     void start_stop_timer();        //Slot activé par le bouton pause qui met en pause ou redémarre le timer
     void clicParametres();          //Slot activé par le bouton des parametres, lance la fenetre des parametres
     void modifParametres();         //Slot activé par le bouton valider dans les parametres, modifie les parametres de la presentation en consequent
-    void clicResultats();           //Slot activé par le bouton Resultats
+    void clicResultats();           //Slot activé par le bouton Resultats, affiche les scores et initialise le tableau en consequent
 
     void analyseIdentifiants(QString, QString); //Interroge la base de donnee et met a jour les elements graphiques en fonction de la validite des identifiants
-
+    void setHostMode();             //Met le mode du joueur en host
 private slots:
     //Slots internes (activés par la presentation)
     void gererTimer();                                //Slot activé par la clock qui met a jour les elements en fonction du temps (maj graphique, pause du jeux du le temps utilisé...)
@@ -72,6 +74,7 @@ private:
     QString nomJoueur;          //Nom du joueur
     unsigned int scoreFin;      //Score défini a l'avance au bout duquel la partie se termine si un des joueur l'atteint
     unsigned int tempsPartie;   //Temps de départ du temps restant
+    Modejoueur modeJoueur;      //Mode du joueur : login ou heberge
 };
 
 #endif // PRESENTATION_H

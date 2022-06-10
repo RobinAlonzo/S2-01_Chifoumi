@@ -22,9 +22,9 @@ public:
     unsigned int getScore() const;
     unsigned int getTemps() const;
 
-    bool nomModifie() const;            //Renvoie un boolean
-    bool scoreFinModifie() const;       //Renvoie un boolean
-    bool tempsPartieModifie() const;    //Renvoie un boolean
+    bool nomModifie() const;            //retourne true si le nom a ete modifie
+    bool scoreFinModifie() const;       //retourne true si le score de fin a ete modifie
+    bool tempsPartieModifie() const;    //retourne true si le temps de la partie a ete modifie
 
 private slots:
     void param1modifie();               //SLOT permettant de modifier l'etat de _nomModifie
@@ -34,9 +34,9 @@ private slots:
 private:
     Ui::Param *ui;
 
-    bool _nomModifie;                   //Permet de voir si le nom a était modifié
-    bool _pointsModifies;               //Permet de voir si les points ont était modifié
-    bool _tempsModifie;                 //Permet de voir si le temps à était modifié
+    bool _nomModifie;                   //Permet de voir si le nom a ete modifie
+    bool _pointsModifies;               //Permet de voir si les points ont ete modifies
+    bool _tempsModifie;                 //Permet de voir si le temps a ete modifie
 
 };
 

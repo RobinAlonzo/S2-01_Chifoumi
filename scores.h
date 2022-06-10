@@ -16,6 +16,8 @@ public:
 
     void majValeurs(QList<QString> &nomJoueur, QList<QString> &scoreJoueur, QList<QString> &nomMachine, QList<QString> &scoreMachine);
 
+signals:
+    void demandeEffacement();
 private:
     Ui::Scores *ui;
 };

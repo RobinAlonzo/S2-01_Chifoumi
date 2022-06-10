@@ -18,8 +18,7 @@ Presentation::Presentation(Modele *m, ChifoumiVue *v, Param *p, Db *db, Identifi
     , _identification(id)
     , _lesScores(scores)
 {
-    timer = new QTimer(this);
-
+    // -- Initialisations --
     //Initialisation nom
     nomJoueur = "Vous";
     _laVue->majNomJoueur(nomJoueur);
@@ -31,20 +30,17 @@ Presentation::Presentation(Modele *m, ChifoumiVue *v, Param *p, Db *db, Identifi
     //initialisation timer
     tempsPartie = 20;
     tempsRestant = tempsPartie;
+    timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(gererTimer()));
     _laVue->majTimer(tempsRestant);
     timer->setInterval(100);
 
-    //Conexion page identification à Db
-    QObject::connect(_identification, SIGNAL(validationId(const QString &, const QString &)), this, SLOT(analyseIdentifiants( const QString &, const QString &)));
-
-    //Conexion des elements graphiques des ui a la presentation
-    _laVue->connexionPresentation(this);
-    _lesParam->connexionPresentation(this, nomJoueur, scoreFin, tempsPartie);
-
-    _identification->show();
-    //_lesScores->show();
-
+    // -- Conexions --
+    connect(_identification, SIGNAL(validationId(const QString &, const QString &)), this, SLOT(analyseIdentifiants( const QString &, const QString &)));  //Identification --> Db
+    _identification->conexionPresentation(this);
+    _laVue->connexionPresentation(this);                                            //Vue --> Presentation
+    _lesParam->connexionPresentation(this, nomJoueur, scoreFin, tempsPartie);       //parametres --> Presentation
+    connect(_lesScores, SIGNAL(demandeEffacement()), _laDb, SLOT(effacerScores())); //Scores --> Db
 }
 
 
@@ -87,7 +83,10 @@ void Presentation::jouer(Modele::UnCoup c)
                 _laVue->setEtatActionParam(true);
                 _laVue->setEtatActionScores(true);
                 affichageFin();
-                _laDb->insererResultat(_laVue->getNomJoueur(),_leModele->getScoreJoueur(),_leModele->getScoreMachine());
+                if (modeJoueur == login)
+                {
+                    _laDb->insererResultat(_laVue->getNomJoueur(),_leModele->getScoreJoueur(),_leModele->getScoreMachine());
+                }
             }
             else
             {
@@ -199,6 +198,7 @@ void Presentation::demanderNouvellePartie()
             // Hors partie
             // Activite 1
             // -- mise a jour du modele --
+tempsRestant = tempsPartie;
             // -- changement d'état --
             _leModele->setEtatJeu(Modele::partieEnCours);
             timer->start();
@@ -280,7 +280,10 @@ void Presentation::gererTimer()
             _laVue->setEtatActionParam(true);
             _laVue->setEtatActionScores(true);
             affichageFin();
-            _laDb->insererResultat(_laVue->getNomJoueur(),_leModele->getScoreJoueur(),_leModele->getScoreMachine());
+            if (modeJoueur == login)
+            {
+                _laDb->insererResultat(_laVue->getNomJoueur(),_leModele->getScoreJoueur(),_leModele->getScoreMachine());
+            }
         }
     }
 }
@@ -394,6 +397,7 @@ void Presentation::analyseIdentifiants(QString id, QString mdp)
     {
     case 0:
         //Identifiants correctes
+        modeJoueur = login;
         _identification->close();
         _laVue->show();
         break;
@@ -414,14 +418,31 @@ void Presentation::analyseIdentifiants(QString id, QString mdp)
     }
 }
 
+void Presentation::setHostMode()
+{
+    modeJoueur = host;
+    nomJoueur = "Host";
+    _laVue->majNomJoueur(nomJoueur);
+
+    //Ouverture vue
+    _identification->close();
+    _laVue->show();
+
+}
+
 void Presentation::clicResultats()
 {
+    //Db --> Valeurs
     QList<QString> nomJoueur;
     QList<QString> scoreJoueur;
     QList<QString> nomMachine;
     QList<QString> scoreMachine;
     _laDb->getScores(nomJoueur, scoreJoueur, nomMachine, scoreMachine);
+
+    //Valeurs --> Tableau resultats
     _lesScores->majValeurs(nomJoueur, scoreJoueur, nomMachine, scoreMachine);
+
+    //Affichage fenetre
     _lesScores->show();
 }
 
